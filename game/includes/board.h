@@ -24,8 +24,9 @@ private:
     short distribute(short seeds, short pos);
     short get_next_valid_pos(short pos);
     void karu_update();
-    void check_playability(short player);
+    bool check_playability(short player);
     short collect(short pos);
+    void collector(short player);
 };
 
 #endif //GAME_BOARD_H

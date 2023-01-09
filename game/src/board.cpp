@@ -35,6 +35,9 @@ void Board::printBoard() {
 }
 
 void Board::play(short player, short pos) {
+    if (check_playability(player)) {
+        return collector();
+    }
     // now, we need to start distribution from the player's side of the board
     // now, we need to find the number of seeds in the starting position
     short seeds = board[pos];
@@ -134,6 +137,45 @@ void Board::karu_update() {
     }
 }
 
-void Board::check_playability(short player) {
-    // we need to check if the game is playable from the perspective of the player
+bool Board::check_playability(short player) {
+    // we need to check if the game is playable from the perspective of the particular player
+    if (player == 0) {
+        // we need to check until BOARD_WIDTH
+        short pos = 0;
+        while (pos < BOARD_WIDTH) {
+            if (board[pos] > 0) {
+                return true;
+            }
+            pos++;
+        }
+    } else {
+        // we need to check until the board length
+        short pos = BOARD_WIDTH;
+        while (pos < BOARD_LEN) {
+            if (board[pos] > 0) {
+                return true;
+            }
+            pos++;
+        }
+    }
+    return false;
+}
+
+void Board::collector(short player) {
+    // collects the seeds from the board, essentially
+    // we already know that one side has nothing, so we just need to check the other side
+    if (player == 0) {
+        // then it means that it was unplayable for player 0
+        short score = 0;
+        for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
+            score += board[i];
+        }
+        scores[1] += score;
+    } else {
+        short score = 0;
+        for (short i = 0; i < BOARD_WIDTH; i++) {
+            score += board[i];
+        }
+        scores[0] += score;
+    }
 }
