@@ -33,6 +33,8 @@ public:
     std::vector<short> get_moves(short player);
     // repopulate the board
     void repopulate_board();
+    // check game over
+    bool game_over();
 private:
     // store as a 1d array, for easier iterations and faster computation
     short board[BOARD_LEN]{};
