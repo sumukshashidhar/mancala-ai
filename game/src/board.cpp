@@ -14,6 +14,18 @@ Board::Board() {
     }
 }
 
+Board::Board(const short *b, const short *s) {
+    // copy the board
+    for (short i = 0; i < BOARD_LEN; i++) {
+        board[i] = b[i];
+    }
+    // copy the scores
+    for (short i = 0; i < BOARD_ROWS; i++) {
+        scores[i] = s[i];
+    }
+}
+
+
 void Board::printBoard() {
     // print the board in a reverse fashion
     for (short i = BOARD_LEN - 1; i >= 0; i--) {
@@ -98,7 +110,7 @@ short Board::collect(short pos) {
 short Board::get_next_valid_pos(short pos) {
     // for a given position, generates the next position, by ignoring all the
     // piggies and bankrupt squares
-    karu_update();
+    four_seed_update();
     if (pos == BOARD_LEN) {
         // now, we need to first reset to 0
         pos = 1;
@@ -115,7 +127,7 @@ short Board::get_next_valid_pos(short pos) {
     return pos;
 }
 
-void Board::karu_update() {
+void Board::four_seed_update() {
     // for each side, we need to remove the seeds, if they are exactly 4
     // iterate through the first side first
     for (int i = 0; i < BOARD_WIDTH; i++) {
@@ -179,3 +191,16 @@ void Board::collector(short player) {
         scores[0] += score;
     }
 }
+
+short Board::get_score(short player) {
+    return scores[player];
+}
+
+short* Board::get_board() {
+    return board;
+}
+
+short *Board::get_scores() {
+    return scores;
+}
+
