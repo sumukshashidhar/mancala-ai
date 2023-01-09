@@ -31,6 +31,8 @@ public:
     short* get_scores();
     // get all possible moves for the scenario!
     std::vector<short> get_moves(short player);
+    // repopulate the board
+    void repopulate_board();
 private:
     // store as a 1d array, for easier iterations and faster computation
     short board[BOARD_LEN]{};

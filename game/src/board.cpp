@@ -225,3 +225,35 @@ std::vector<short> Board::get_moves(short player) {
     return options;
 }
 
+void Board::repopulate_board() {
+    // repopulate the board using the scores.
+    // lets repopulate for player one first
+    while (scores[0] >= 0) {
+        for (short i = 0; i < BOARD_WIDTH; i++) {
+            // first, make sure that we have enough points
+            if (scores[0] >= NUM_SEEDS) {
+                board[i] += NUM_SEEDS;
+                scores[0] -= NUM_SEEDS;
+            } else {
+                // this is a bad situation,
+                // we need to keep the score, and then bankrupt the remaining squares
+                board[i] = -1;
+            }
+        }
+    }
+    // now, repeat this for the other side
+    while (scores[1] >= 0) {
+        for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
+            // first, make sure that we have enough points
+            if (scores[0] >= NUM_SEEDS) {
+                board[i] += NUM_SEEDS;
+                scores[0] -= NUM_SEEDS;
+            } else {
+                // this is a bad situation,
+                // we need to keep the score, and then bankrupt the remaining squares
+                board[i] = -1;
+            }
+        }
+    }
+}
+
