@@ -25,7 +25,6 @@ Board::Board(const short *b, const short *s) {
     }
 }
 
-
 void Board::printBoard() {
     // print the board in a reverse fashion
     for (short i = BOARD_LEN - 1; i >= 0; i--) {
@@ -72,8 +71,6 @@ short Board::distribute(short seeds, short pos) {
     }
     // it ends at some point. we need to figure out WHY it ended first.
     // we have to check for certain things first
-//    // we just need to pick up the seeds from the next valid pos
-//    pos = get_next_valid_pos(pos);
     // now, we need to take the seeds from there
     // if this next pos is empty, then we need to collect from the pos after that
     if (board[pos] == 0) {
@@ -83,8 +80,6 @@ short Board::distribute(short seeds, short pos) {
         // if not, we need to pick up, and start to dis
         seeds = board[pos];
         board[pos] = 0;
-        // re-distribute
-//        printBoard();
         return distribute(seeds, get_next_valid_pos(pos));
     }
 }
@@ -97,8 +92,8 @@ short Board::collect(short pos) {
     board[pos] = 0;
     // let us also get the seeds on the opposite side of pos
     short opposite_pos = BOARD_LEN - pos - 1;
+    // means the square is bankrupt
     if (board[opposite_pos] < 0) {
-        // means the square is bankrupt
         return seed_store;
     }
     seed_store += board[opposite_pos];
@@ -130,7 +125,7 @@ short Board::get_next_valid_pos(short pos) {
 void Board::four_seed_update() {
     // for each side, we need to remove the seeds, if they are exactly 4
     // iterate through the first side first
-    for (int i = 0; i < BOARD_WIDTH; i++) {
+    for (short i = 0; i < BOARD_WIDTH; i++) {
         if (board[i] == 4) {
             // remove the seeds
             board[i] = 0;
@@ -139,7 +134,7 @@ void Board::four_seed_update() {
         }
     }
     // now, iterate through the other side
-    for (int i = BOARD_WIDTH; i < BOARD_LEN; i++) {
+    for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
         if (board[i] == 4) {
             // remove the seeds
             board[i] = 0;
@@ -174,21 +169,21 @@ bool Board::check_playability(short player) {
 }
 
 void Board::collector(short player) {
-    // collects the seeds from the board, essentially
-    // we already know that one side has nothing, so we just need to check the other side
+    short score = 0;
+    short pos = 0;
     if (player == 0) {
-        // then it means that it was unplayable for player 0
-        short score = 0;
-        for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
-            score += board[i];
-            board[i] = 0;
+        pos = BOARD_WIDTH;
+        while (pos < BOARD_LEN) {
+            score += board[pos];
+            board[pos] = 0;
+            pos = get_next_valid_pos(pos);
         }
         scores[1] += score;
     } else {
-        short score = 0;
-        for (short i = 0; i < BOARD_WIDTH; i++) {
-            score += board[i];
-            board[i] = 0;
+        while (pos < BOARD_WIDTH) {
+            score += board[pos];
+            board[pos] = 0;
+            pos = get_next_valid_pos(pos);
         }
         scores[0] += score;
     }
@@ -240,20 +235,37 @@ void Board::repopulate_board() {
                 board[i] = -1;
             }
         }
+        // now, we just need to break from this loop
+        break;
     }
     // now, repeat this for the other side
     while (scores[1] >= 0) {
         for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
             // first, make sure that we have enough points
-            if (scores[0] >= NUM_SEEDS) {
+            if (scores[1] >= NUM_SEEDS) {
                 board[i] += NUM_SEEDS;
-                scores[0] -= NUM_SEEDS;
+                scores[1] -= NUM_SEEDS;
             } else {
                 // this is a bad situation,
                 // we need to keep the score, and then bankrupt the remaining squares
                 board[i] = -1;
             }
         }
+        // now, we just need to break from this loop
+        break;
     }
+}
+
+bool Board::game_over() {
+    // we can do this by checking if the game
+    // this function is definitely called before repopulation, so we can just check the scores
+    // two conditions
+    if (scores[0] < 5 && !check_playability(0)) {
+        return true;
+    }
+    if (scores[1] < 5 && !check_playability(1)) {
+        return true;
+    }
+    return false;
 }
 
