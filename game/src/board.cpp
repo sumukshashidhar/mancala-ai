@@ -46,9 +46,10 @@ void Board::printBoard() {
     std::cout << "Scores: " << scores[0] << " " << scores[1] << std::endl;
 }
 
-void Board::play(short player, short pos) {
-    if (check_playability(player)) {
-        return collector();
+bool Board::play(short player, short pos) {
+    if (!check_playability(player)) {
+        collector(player);
+        return false;
     }
     // now, we need to start distribution from the player's side of the board
     // now, we need to find the number of seeds in the starting position
@@ -56,9 +57,8 @@ void Board::play(short player, short pos) {
     // now remove the num seeds?
     board[pos] = 0;
     // now, we need to distribute the seeds
-    scores[player] = distribute(seeds, get_next_valid_pos(pos));
-    // print
-//    printBoard();
+    scores[player] += distribute(seeds, get_next_valid_pos(pos));
+    return true;
 
 }
 
@@ -181,12 +181,14 @@ void Board::collector(short player) {
         short score = 0;
         for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
             score += board[i];
+            board[i] = 0;
         }
         scores[1] += score;
     } else {
         short score = 0;
         for (short i = 0; i < BOARD_WIDTH; i++) {
             score += board[i];
+            board[i] = 0;
         }
         scores[0] += score;
     }
