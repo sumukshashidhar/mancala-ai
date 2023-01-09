@@ -6,6 +6,7 @@
 #define GAME_BOARD_H
 
 #include <iostream>
+#include <vector>
 
 const short BOARD_ROWS = 2;
 const short BOARD_WIDTH = 7;
@@ -28,6 +29,8 @@ public:
     short* get_board();
     // get the score array
     short* get_scores();
+    // get all possible moves for the scenario!
+    std::vector<short> get_moves(short player);
 private:
     // store as a 1d array, for easier iterations and faster computation
     short board[BOARD_LEN]{};

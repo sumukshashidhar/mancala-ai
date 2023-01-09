@@ -206,3 +206,22 @@ short *Board::get_scores() {
     return scores;
 }
 
+std::vector<short> Board::get_moves(short player) {
+    // for the particular player, we just need to check
+    std::vector<short> options;
+    if (player == 0) {
+       for (short i = 0; i < BOARD_WIDTH; i++) {
+           if (board[i] > 0) {
+               options.push_back(i);
+           }
+       }
+    } else {
+        for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
+            if (board[i] > 0) {
+                options.push_back(i);
+            }
+        }
+    }
+    return options;
+}
+
