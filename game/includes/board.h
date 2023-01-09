@@ -21,7 +21,7 @@ public:
     // print the state of the board for the user
     void printBoard();
     // play a move for a particular player
-    void play(short player, short pos);
+    bool play(short player, short pos);
     // to get the scores
     short get_score(short player);
     // to get the state of the board
