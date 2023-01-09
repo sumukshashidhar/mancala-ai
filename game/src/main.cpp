@@ -2,8 +2,6 @@
 // Created by Sumuk Shashidhar on 1/9/23.
 //
 
-#include "board.h"
-#include <cstdlib>
 
 //void play_infinite() {
 //    Board b;
@@ -44,6 +42,11 @@
 //    std::cout << "Rounds: " << rounds << std::endl;
 //}
 
+#include "board.h"
+#include "agent.h"
+
+
 int main() {
-//    play_infinite();
+    Agent a;
+    a.play_game(true);
 }
