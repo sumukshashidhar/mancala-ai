@@ -35,6 +35,7 @@ public:
     void repopulate_board();
     // check game over
     bool game_over();
+    short get_bankruptcy_score();
 private:
     // store as a 1d array, for easier iterations and faster computation
     short board[BOARD_LEN]{};
@@ -45,6 +46,8 @@ private:
     bool check_playability(short player);
     short collect(short pos);
     void collector(short player);
+
+
 };
 
 #endif //GAME_BOARD_H
