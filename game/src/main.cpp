@@ -9,5 +9,6 @@
 
 int main() {
     Agent a;
-    a.play_game(true);
+    a.playWithRandomAgent();
+//    a.play_game(true);
 }
