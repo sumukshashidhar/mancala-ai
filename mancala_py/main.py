@@ -30,6 +30,16 @@ class Board:
 
     def get_valid_moves(self):
         return [i for i in range(LEN_BOARD) if self.board[i] > 0]
+    
+    def _score_integrity_check(self):
+        # checks that the score is accurate, and seeds have not been lost
+        total = NUM_SEEDS * LEN_BOARD
+        for i in range(LEN_BOARD):
+            if self.board[i] > 0:
+                total -= self.board[i]
+        total -= self.scores[0]
+        total -= self.scores[1]
+        return total == 0
 
     def make_move(self, player, move):
         # first, check if the move is valid
@@ -40,7 +50,11 @@ class Board:
         self.board[move] = 0
         # now, we need to distribute the seeds
         move = self._get_next_hole(move)
-        self.scores[player] += self._distribute_seeds(move, num_seeds)
+        extra_score = self._distribute_seeds(move, num_seeds)
+        self.scores[player] += extra_score
+        # if (not self._score_integrity_check()):
+        #     print("STOP!")
+        #     exit()
         return
 
     def _get_next_hole(self, pos):
@@ -173,6 +187,7 @@ if __name__ == "__main__":
             print(board)
             if not val[0]:
                 print(f"GAME OVER: PLAYER {val[1]} LOSES.")
+                break
 
 
         if player == 0:
@@ -183,6 +198,6 @@ if __name__ == "__main__":
         board.make_move(player, move)
         print(board)
         player = (player + 1) % 2
-        time.sleep(0.2)
+        # time.sleep(1)
 
 
