@@ -10,5 +10,5 @@
 int main() {
     Board b;
     AI ai;
-    std::cout << ai.getBestMove(b, 0) << std::endl;
+    ai.playTheAi(b);
 }
