@@ -5,10 +5,10 @@
 
 #include "board.h"
 #include "agent.h"
-
+#include "ai.h"
 
 int main() {
-    Agent a;
-    a.playWithRandomAgent();
-//    a.play_game(true);
+    Board b;
+    AI ai;
+    std::cout << ai.getBestMove(b, 0) << std::endl;
 }
