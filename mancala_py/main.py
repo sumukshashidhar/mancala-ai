@@ -1,17 +1,18 @@
 NUM_SEEDS = 5
 LEN_BOARD = 14
 BOARD_WIDTH = 7
-class Board:
 
+
+class Board:
     def __init__(self) -> None:
         self.board = [NUM_SEEDS] * LEN_BOARD
         # self.board = [i for i in range(LEN_BOARD)]
         self.scores = [0, 0]
-    
+
     def __str__(self) -> str:
         s = "-" * 4 * BOARD_WIDTH + "\n"
         s += f"|"
-        for hole in self.board[-1:BOARD_WIDTH - 1:-1]:
+        for hole in self.board[-1 : BOARD_WIDTH - 1 : -1]:
             s += f"{hole:2} |"
         s += "\n" + "-" * 4 * BOARD_WIDTH + "\n|"
         for hole in self.board[:BOARD_WIDTH]:
@@ -26,12 +27,10 @@ class Board:
 
     def get_valid_moves(self):
         return [i for i in range(LEN_BOARD) if self.board[i] > 0]
-            
-
 
     def make_move(self, player, move):
         # first, check if the move is valid
-        if (not self._is_valid_hole(move)):
+        if not self._is_valid_hole(move):
             raise ValueError("Invalid move")
         # this means that the move is valid
         num_seeds = self.board[move]
@@ -39,7 +38,7 @@ class Board:
         # now, we need to distribute the seeds
         self.scores[player] += self._distribute_seeds(move, num_seeds)
         return
-    
+
     def _get_next_hole(self, pos):
         # wrap around
         if pos + 1 == LEN_BOARD:
@@ -64,9 +63,7 @@ class Board:
             score += self.board[opposite_hole]
             self.board[opposite_hole] = 0
         return score
-        
 
-    
     def _distribute_seeds(self, pos, num_seeds):
         while True:
             self.board[pos] += 1
@@ -110,7 +107,7 @@ class Board:
                 if self.board[pos] > 0:
                     return True
             return False
-    
+
     def collect_all(self):
         # just collects the seeds that exist on their side of the board
         pos = 0
@@ -123,7 +120,6 @@ class Board:
             self.board[pos] = 0
             pos = self._get_next_hole(pos)
         return
-        
 
 
 if __name__ == "__main__":
