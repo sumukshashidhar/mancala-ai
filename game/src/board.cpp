@@ -270,3 +270,18 @@ bool Board::game_over() {
     return false;
 }
 
+short Board::get_bankruptcy_score() {
+    short score = 0;
+    for (short i = 0; i < BOARD_WIDTH; i++) {
+        if (board[i] < 0) {
+            score -= 1;
+        }
+    }
+    for (short i = BOARD_WIDTH; i < BOARD_LEN; i++) {
+        if (board[i] < 0) {
+            score += 1;
+        }
+    }
+    return score;
+}
+
