@@ -80,6 +80,7 @@ short Board::distribute(short seeds, short pos) {
         // if not, we need to pick up, and start to dis
         seeds = board[pos];
         board[pos] = 0;
+//        printBoard();
         return distribute(seeds, get_next_valid_pos(pos));
     }
 }
