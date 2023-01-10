@@ -11,10 +11,16 @@ class Agent {
 public:
     Agent();
     void play_game(bool verbose = false);
+    // reset game functionality
+    void reset_game();
+    // play with random agent!
+    void playWithRandomAgent();
 private:
     Board internal_board;
     short generateRandomMove(short player);
-
+    bool noMovesLeft();
+    short moveConverter(short move);
+    void playUserMove(short player);
 };
 
 
