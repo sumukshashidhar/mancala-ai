@@ -21,7 +21,74 @@ class Board:
         s += f"Player 1: {self.scores[0]} | Player 2: {self.scores[1]}\n"
         return s
 
+    def _is_valid_hole(self, move):
+        return self.board[move] > 0
+
+    def get_valid_moves(self):
+        return [i for i in range(LEN_BOARD) if self.board[i] > 0]
+            
+
+
+    def make_move(self, player, move):
+        # first, check if the move is valid
+        if (not self._is_valid_hole(move)):
+            raise ValueError("Invalid move")
+        # this means that the move is valid
+        num_seeds = self.board[move]
+        self.board[move] = 0
+        # now, we need to distribute the seeds
+        self.scores[player] += self._distribute_seeds(move, num_seeds)
+        return
+    
+    def _get_next_hole(self, pos):
+        # wrap around
+        if pos + 1 == LEN_BOARD:
+            pos = 0
+        else:
+            pos += 1
+        # we have to check if there are piggies / bankruptcies
+        while self.board[pos] < 0:
+            # this works, because everyone CAN'T be bankrupt at the same time
+            pos += 1
+        return pos
+
+    def _collect_seeds(self, pos):
+        # we need to collect the seeds in this particular hole, as well as the opposite hole
+        score = self.board[pos]
+        self.board[pos] = 0
+        # now, we need to check the opposite hole
+        opposite_hole = LEN_BOARD - pos - 1
+        if self._is_valid_hole(opposite_hole):
+            score += self.board[opposite_hole]
+            self.board[opposite_hole] = 0
+        return score
+        
+
+    
+    def _distribute_seeds(self, pos, num_seeds):
+        while True:
+            self.board[pos] += 1
+            num_seeds -= 1
+            pos = self._get_next_hole(pos)
+
+            if num_seeds == 0:
+                # we need to essentially "pick up" the seed in the next hole
+                num_seeds = self.board[pos]
+                self.board[pos] = 0
+                pos = self._get_next_hole(pos)
+                # now, we need to handle the case in which the num seeds is 0.
+                # is is when we run the collection algorithm
+                if num_seeds == 0:
+                    return self._collect_seeds(pos)
+                # otherwise, we just have to continue, nothing else to do
+
+
+
+        
+
 
 if __name__ == "__main__":
     b = Board()
+    print(b)
+    b.make_move(0, 4)
     print(b)
