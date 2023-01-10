@@ -8,14 +8,14 @@
 #include "board.h"
 #include <vector>
 
-const int DEPTH = 10; // look 3 moves deep
+const int DEPTH = 30; // look 30 moves deep
 
 class AI{
 public:
     AI() = default;
     short getBestMove(Board board, short player);
 private:
-    short minimax(Board board, short depth, short player);
+    short minimax(Board board, short depth, short alpha, short beta, short player);
     short evaluate(Board board);
 };
 
