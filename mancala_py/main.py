@@ -53,6 +53,8 @@ class Board:
         return pos
 
     def _collect_seeds(self, pos):
+        # run the 4 seed update
+        self._four_seed_update()
         # we need to collect the seeds in this particular hole, as well as the opposite hole
         score = self.board[pos]
         self.board[pos] = 0
@@ -82,8 +84,32 @@ class Board:
                     return self._collect_seeds(pos)
                 # otherwise, we just have to continue, nothing else to do
 
+    def _four_seed_update(self):
+        # for player 1s iteration
+        for i in range(BOARD_WIDTH):
+            if self.board[i] == 4:
+                self.board[i] = 0
+                self.scores[0] += 4
+        # for player 2s iteration
+        for i in range(BOARD_WIDTH, LEN_BOARD):
+            if self.board[i] == 4:
+                self.board[i] = 0
+                self.scores[1] += 4
 
-
+    def can_play(self, player):
+        if player == 0:
+            pos = 0
+            while pos < BOARD_WIDTH:
+                if self.board[pos] > 0:
+                    return True
+                pos += 1
+            return False
+        else:
+            pos = BOARD_WIDTH
+            while pos < LEN_BOARD:
+                if self.board[pos] > 0:
+                    return True
+            return False
         
 
 
