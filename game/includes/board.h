@@ -36,6 +36,11 @@ public:
     // check game over
     bool game_over();
     short get_bankruptcy_score();
+
+    bool check_playability(short player);
+
+    void collector(short player);
+
 private:
     // store as a 1d array, for easier iterations and faster computation
     short board[BOARD_LEN]{};
@@ -43,9 +48,8 @@ private:
     short distribute(short seeds, short pos);
     short get_next_valid_pos(short pos);
     void four_seed_update();
-    bool check_playability(short player);
+
     short collect(short pos);
-    void collector(short player);
 
 
 };
