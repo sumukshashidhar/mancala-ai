@@ -4,6 +4,7 @@
 #include "ai.h"
 
 short AI::getBestMove(Board board, short player) {
+    std::cout << "AI is thinking..." << std::endl;
     // let us make a list of moves first
     std::vector<short> possible_moves = board.get_moves(player);
     // then make a var to store the best possible move
@@ -19,7 +20,7 @@ short AI::getBestMove(Board board, short player) {
             // get the score
             short score = minimax(new_board, DEPTH, -32700, 32700,1);
             // if the score is better than the best score, update the best score
-            std::cout << "Score for move " << move << " is " << score << std::endl;
+//            std::cout << "Score for move " << move << " is " << score << std::endl;
             if (score > best_score) {
                 best_score = score;
                 best_move = move;
@@ -36,7 +37,7 @@ short AI::getBestMove(Board board, short player) {
             new_board.play(player, move);
             // get the score
             short score = minimax(new_board, DEPTH, -32700, 32700, 0);
-            std::cout << "Score for move " << move << " is " << score << std::endl;
+//            std::cout << "Score for move " << move << " is " << score << std::endl;
             // if the score is better than the best score, update the best score
             if (score < best_score) {
                 best_score = score;
@@ -106,4 +107,70 @@ short AI::evaluate(Board board) {
     eval_score += 5 * board.get_bankruptcy_score();
 
     return eval_score;
+}
+
+void AI::playTheAi(Board &board) {
+    // allows you to play the AI
+    // ask which player the user is
+    short user_player = getUserPlayerChoice();
+    // now, let us play the game
+    short current_player = 0;
+    if (user_player == 0) {
+        playUserMove(board, 0);
+        current_player = 1;
+    }
+    while (true) {
+        // make sure the game isn't unplayable
+        if (!board.check_playability(current_player)) {
+            // the board is not playable for
+            std::cout << "Player " << current_player << " has no moves left. Need to re-populate." << std::endl;
+            board.collector(current_player);
+            // repopulate
+            std::cout << "Re-filling the board" << std::endl;
+            board.repopulate_board();
+            // check if the game is over
+        }
+        short move = getBestMove(board, current_player);
+        board.play(current_player, move);
+        //
+        std::cout << "The computer played: " << move << std::endl;
+        // flip the current player
+        current_player = (current_player + 1) % 2;
+        if (!board.check_playability(current_player)) {
+            std::cout << "Player " << current_player << " has no moves left. Need to re-populate." << std::endl;
+            board.collector(current_player);
+            // repopulate
+            std::cout << "Re-filling the board" << std::endl;
+            board.repopulate_board();
+
+        }
+        playUserMove(board, current_player);
+        current_player = (current_player + 1) % 2;
+    }
+
+}
+
+void AI::playUserMove(Board& board, short player) {
+    // ask for a move
+    board.printBoard();
+    // ask the user for a move choice
+    short move_choice;
+    std::cout << "Enter your move choice: " << std::endl;
+    std::cin >> move_choice;
+    if (player == 1) {
+        move_choice += BOARD_WIDTH - 1;
+    } else {
+        move_choice -= 1;
+    }
+    // play the move
+    board.play(player, move_choice);
+    // the board is now:
+    board.printBoard();
+}
+
+short AI::getUserPlayerChoice() {
+    std::cout << "Which player are you? (1 or 2)" << std::endl;
+    short user_player;
+    std::cin >> user_player;
+    return user_player - 1;
 }
