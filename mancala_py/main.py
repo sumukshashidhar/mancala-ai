@@ -120,6 +120,33 @@ class Board:
             self.board[pos] = 0
             pos = self._get_next_hole(pos)
         return
+    
+    def repopulate(self):
+        # repopulate based on the number of seeds each player has
+        pos = 0
+        flag = False
+        while pos < BOARD_WIDTH:
+            if (self.scores[0] >= NUM_SEEDS):
+                self.board[pos] = NUM_SEEDS
+                self.scores[0] -= NUM_SEEDS
+                flag = True
+            else:
+                self.board[pos] = -1
+            pos += 1
+        if not flag:
+            return (False, 0)
+        flag = False
+        while pos < LEN_BOARD and pos > 0:
+            if (self.scores[1] >= NUM_SEEDS):
+                self.board[pos] = NUM_SEEDS
+                self.scores[1] -= NUM_SEEDS
+                flag = True
+            else:
+                self.board[pos] = -1
+        if not flag:
+            return (False, 1)
+        return True
+
 
 
 if __name__ == "__main__":
