@@ -28,7 +28,12 @@ Board::Board(const short *b, const short *s) {
 void Board::printBoard() {
     // print the board in a reverse fashion
     for (short i = BOARD_LEN - 1; i >= 0; i--) {
-        std::cout << board[i] << " ";
+        if (board[i] < 0) {
+            std::cout << "*" << " ";
+        } else {
+            std::cout << board[i] << " ";
+        }
+
         if (i == BOARD_WIDTH) {
             std::cout << std::endl;
             break;
@@ -56,9 +61,33 @@ bool Board::play(short player, short pos) {
     // now remove the num seeds?
     board[pos] = 0;
     // now, we need to distribute the seeds
-    scores[player] += distribute(seeds, get_next_valid_pos(pos));
+    scores[player] += nonRecursiveDistribute(seeds, get_next_valid_pos(pos));
     return true;
 
+}
+
+short Board::nonRecursiveDistribute(short seeds, short pos) {
+    // a non recursive implementation
+    while(true) {
+        board[pos]++;
+        seeds--;
+        pos = get_next_valid_pos(pos);
+
+        if (seeds == 0) {
+//            std::cout << "----------------------------" << std::endl;
+//            std::cout << "SEEDS GOT OVER AT " << pos << std::endl;
+//            printBoard();
+//            std::cout << "----------------------------" << std::endl;
+            if (board[pos] == 0) {
+                return collect(get_next_valid_pos(pos));
+            } else {
+                seeds = board[pos];
+                board[pos] = 0;
+                pos = get_next_valid_pos(pos);
+            }
+        }
+
+    }
 }
 
 short Board::distribute(short seeds, short pos) {

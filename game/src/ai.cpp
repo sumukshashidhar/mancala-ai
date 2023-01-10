@@ -61,7 +61,7 @@ short AI::minimax(Board board, short depth, short alpha, short beta, short playe
             new_board.play(player, move);
             short score = minimax(new_board, depth - 1, alpha, beta, 1);
             best_score = std::max(best_score, score);
-            alpha = std::max(alpha, best_score);
+            alpha = std::max(alpha, score);
             if (beta <= alpha) {
                 break;
             }
@@ -73,7 +73,7 @@ short AI::minimax(Board board, short depth, short alpha, short beta, short playe
             new_board.play(player, move);
             short score = minimax(new_board, depth - 1, alpha, beta, 0);
             best_score = std::min(best_score, score);
-            beta = std::min(beta, best_score);
+            beta = std::min(beta, score);
             if (beta <= alpha) {
                 break;
             }

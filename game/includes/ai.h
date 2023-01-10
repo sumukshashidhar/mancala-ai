@@ -8,7 +8,7 @@
 #include "board.h"
 #include <vector>
 
-const int DEPTH = 20; // look 30 moves deep
+const int DEPTH = 15; // look 30 moves deep
 
 class AI{
 public:

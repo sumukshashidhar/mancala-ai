@@ -45,6 +45,7 @@ private:
     // store as a 1d array, for easier iterations and faster computation
     short board[BOARD_LEN]{};
     short scores[BOARD_ROWS]{};
+    short nonRecursiveDistribute(short seeds, short pos);
     short distribute(short seeds, short pos);
     short get_next_valid_pos(short pos);
     void four_seed_update();
