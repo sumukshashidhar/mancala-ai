@@ -1,3 +1,6 @@
+import time
+import random
+
 NUM_SEEDS = 5
 LEN_BOARD = 14
 BOARD_WIDTH = 7
@@ -36,19 +39,23 @@ class Board:
         num_seeds = self.board[move]
         self.board[move] = 0
         # now, we need to distribute the seeds
+        move = self._get_next_hole(move)
         self.scores[player] += self._distribute_seeds(move, num_seeds)
         return
 
     def _get_next_hole(self, pos):
         # wrap around
         if pos + 1 == LEN_BOARD:
-            pos = 0
+            pos = 0 # wrap around
         else:
             pos += 1
         # we have to check if there are piggies / bankruptcies
         while self.board[pos] < 0:
             # this works, because everyone CAN'T be bankrupt at the same time
-            pos += 1
+            if pos + 1 == LEN_BOARD:
+                pos = 0
+            else:
+                pos += 1
         return pos
 
     def _collect_seeds(self, pos):
@@ -106,6 +113,7 @@ class Board:
             while pos < LEN_BOARD:
                 if self.board[pos] > 0:
                     return True
+                pos += 1
             return False
 
     def collect_all(self):
@@ -143,14 +151,38 @@ class Board:
                 flag = True
             else:
                 self.board[pos] = -1
+            pos += 1
         if not flag:
             return (False, 1)
-        return True
+        return True, -1
 
 
 
 if __name__ == "__main__":
-    b = Board()
-    print(b)
-    b.make_move(0, 4)
-    print(b)
+    board = Board()
+    # print(board)
+    player = 0
+    while True:
+        # check if you can play the game first
+        if not board.can_play(player):
+            print("Player ", player, " cant play")
+            # so collect and re-pop
+            print("Collecting and re-populating")
+            board.collect_all()
+            val = board.repopulate()
+            print(board)
+            if not val[0]:
+                print(f"GAME OVER: PLAYER {val[1]} LOSES.")
+
+
+        if player == 0:
+            move = random.choice([x for x in board.get_valid_moves() if x < BOARD_WIDTH])
+        else:
+            move = random.choice([x for x in board.get_valid_moves() if x >= BOARD_WIDTH])
+        print("Making Move: ", move)
+        board.make_move(player, move)
+        print(board)
+        player = (player + 1) % 2
+        time.sleep(0.2)
+
+
