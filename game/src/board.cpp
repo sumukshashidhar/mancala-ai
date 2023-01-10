@@ -174,7 +174,7 @@ void Board::collector(short player) {
     short pos = 0;
     if (player == 0) {
         pos = BOARD_WIDTH;
-        while (pos < BOARD_LEN) {
+        while (pos < BOARD_LEN && pos > 0) {
             score += board[pos];
             board[pos] = 0;
             pos = get_next_valid_pos(pos);
