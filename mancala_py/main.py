@@ -110,6 +110,19 @@ class Board:
                 if self.board[pos] > 0:
                     return True
             return False
+    
+    def collect_all(self):
+        # just collects the seeds that exist on their side of the board
+        pos = 0
+        while pos < BOARD_WIDTH:
+            self.scores[0] += self.board[pos]
+            self.board[pos] = 0
+            pos = self._get_next_hole(pos)
+        while pos < LEN_BOARD and pos > 0:
+            self.scores[1] += self.board[pos]
+            self.board[pos] = 0
+            pos = self._get_next_hole(pos)
+        return
         
 
 
